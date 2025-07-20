@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIVANAND CK - EcoXchange: Soil to Satellites</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Deep dark background */
+            color: #e0e0e0; /* Light grey text */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        /* Custom scrollbar for a futuristic feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6a6a6a;
+        }
+
+        .module-card {
+            background-color: #1a1a1a; /* Slightly lighter dark for cards */
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1), 0 0 5px rgba(0, 255, 255, 0.05); /* Subtle cyan glow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2), 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #00ffff; /* Cyan on hover */
+            transform: translateX(5px);
+        }
+
+        /* Rotating Bookshelf Styles */
+        .bookshelf-container {
+            perspective: 1000px; /* For 3D effect */
+            height: 300px; /* Fixed height for the bookshelf */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .bookshelf {
+            position: relative;
+            width: 200px; /* Width of a single book stack */
+            height: 250px; /* Height of a single book */
+            transform-style: preserve-3d;
+            transform: rotateY(0deg); /* Initial rotation */
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .book-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #333;
+            border: 1px solid #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #eee;
+            backface-visibility: hidden; /* Hide back of rotated elements */
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Roadmap timeline styles */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            list-style: none;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background-color: #00ffff; /* Cyan line */
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding: 10px 20px;
+            width: 50%;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 12px;
+            height: 12px;
+            background-color: #00ffff;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-item:nth-child(odd)::before {
+            right: -6px;
+        }
+        .timeline-item:nth-child(even)::before {
+            left: -6px;
+        }
+        .timeline-item-content {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+            border: 1px solid #333;
+        }
+        .timeline-item:nth-child(odd) .timeline-item-content {
+            margin-right: 20px;
+        }
+        .timeline-item:nth-child(even) .timeline-item-content {
+            margin-left: 20px;
+        }
+
+        /* Mobile responsiveness for roadmap */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 40px;
+                text-align: left !important;
+            }
+            .timeline-item::before {
+                left: 14px !important;
+            }
+            .timeline-item-content {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm p-4 border-b border-gray-700 shadow-lg">
+        <nav class="container mx-auto flex justify-between items-center">
+            <div class="text-xl font-bold text-cyan-400">SIVANAND CK</div>
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="nav-link text-gray-300 hover:text-cyan-400">Home</a></li>
+                <li><a href="#ecoxchange" class="nav-link text-gray-300 hover:text-cyan-400">EcoXchange</a></li>
+                <li><a href="#lab" class="nav-link text-gray-300 hover:text-cyan-400">Digital Lab</a></li>
+                <li><a href="#thoughts" class="nav-link text-gray-300 hover:text-cyan-400">Thoughts</a></li>
+                <li><a href="#quests" class="nav-link text-gray-300 hover:text-cyan-400">Side Quests</a></li>
+                <li><a href="#books" class="nav-link text-gray-300 hover:text-cyan-400">Bookshelf</a></li>
+                <li><a href="#roadmap" class="nav-link text-gray-300 hover:text-cyan-400">Roadmap</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="pt-20">
+        <!-- Home / Hero Section -->
+        <section id="home" class="min-h-screen flex items-center justify-center text-center p-8 relative overflow-hidden">
+            <!-- Background grid/pattern -->
+            <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+            <div class="relative z-10 max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 animate-fade-in-up">
+                    SIVANAND CK: <span class="text-cyan-400">Pioneering EcoXchange</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 animate-fade-in-up delay-200">
+                    From soil to satellites, building a digital platform for verified ecosystem services and a sustainable future.
+                </p>
+                <a href="#ecoxchange" class="inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition duration-300 hover:scale-105 animate-fade-in-up delay-400">
+                    Explore EcoXchange Mission
+                </a>
+            </div>
+        </section>
+
+        <!-- EcoXchange Section (Main Highlight) -->
+        <section id="ecoxchange" class="py-20 px-8 bg-gray-950 border-t border-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-12">EcoXchange: Cultivating a Sustainable Future</h2>
+                <div class="module-card p-8 rounded-xl mb-12">
+                    <div class="flex flex-col md:flex-row items-center md:space-x-8">
+                        <div class="md:w-1/2">
+                            <img src="https://placehold.co/600x400/1a1a1a/00ffff?text=EcoXchange+Diagram" alt="EcoXchange Diagram" class="rounded-lg shadow-lg mb-6 md:mb-0">
+                        </div>
+                        <div class="md:w-1/2">
+                            <h3 class="text-3xl font-semibold text-white mb-4">About EcoXchange</h3>
+                            <p class="text-gray-300 leading-relaxed mb-4">
+                                EcoXchange is a pioneering digital platform founded by Sivanand C.K., connecting landowners and companies through verified ecosystem services. Our mission is to facilitate carbon sequestration, biodiversity restoration, and regenerative agriculture, creating a tangible impact on environmental health and local livelihoods.
+                            </p>
+                            <p class="text-gray-400 text-sm">
+                                <strong class="text-cyan-300">Background:</strong> M.Sc aspirant in Ecosystem Services (Germany) from Wayanad, Kerala.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Objective 1 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Ecosystem Restoration</h3>
+                        <p class="text-gray-400">Restore degraded forest land using native tree species, improving soil health and enhancing biodiversity.</p>
+                    </div>
+                    <!-- Objective 2 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Ecological Monitoring</h3>
+                        <p class="text-gray-400">Utilize satellite imagery, AI tools, and local field data to monitor ecological benefits like carbon stock and biodiversity count.</p>
+                    </div>
+                    <!-- Objective 3 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Verified Ecosystem Services</h3>
+                        <p class="text-gray-400">Package results as verified ecosystem service projects to attract CSR and green investment.</p>
+                    </div>
+                </div>
+
+                <div class="module-card p-8 rounded-xl mb-12">
+                    <h3 class="text-3xl font-semibold text-white mb-4">Technology & Impact</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-xl font-medium text-cyan-300 mb-2">Technology Stack:</h4>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li><strong>Remote Sensing:</strong> Sentinel, Landsat (NDVI, canopy cover)</li>
+                                <li><strong>Drone Surveys:</strong> Low-altitude for species counts, moisture checks</li>
+                                <li><strong>Field Methods:</strong> Mobile data collection, photographic biodiversity logs</li>
+                                <li><strong>AI Dashboards:</strong> For carbon stock and species analysis</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-medium text-cyan-300 mb-2">Expected Outcomes:</h4>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li><strong>CO2 Sequestration:</strong> ~4 tons per acre per year</li>
+                                <li><strong>Biodiversity Tracking:</strong> 20+ fauna species & 10+ flora indicators monitored</li>
+                                <li><strong>Soil Organic Carbon Improvement:</strong> +15% in 12 months (estimated)</li>
+                                <li>Grant-Ready Reports and Replicable Model for other zones</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-medium text-cyan-300 mt-6 mb-2">Community & Social Engagement:</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Local tribal youth and forest watchers will be involved in data gathering, tree care, and ecological monitoring. Honorarium/training opportunities will be provided, fostering local ownership and conservation interest.
+                    </p>
+                    <h4 class="text-xl font-medium text-cyan-300 mt-6 mb-2">Why This Matters:</h4>
+                    <ul class="list-disc list-inside text-gray-400">
+                        <li>Supports Kerala Forest Dept's climate targets and afforestation goals.</li>
+                        <li>Attracts CSR and international green capital into local ecosystem restoration.</li>
+                        <li>Builds a scalable model for youth-led, tech-driven forest credit generation.</li>
+                        <li>Promotes sustainable livelihoods for local communities.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital Lab Section (Achievements) -->
+        <section id="lab" class="py-20 px-8 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-12">Digital Lab: Other Innovations & Achievements</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card 1: Agri-Tech Drone System (Example, can be removed if only EcoXchange is main focus) -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Precision Agri-Drone System</h3>
+                        <p class="text-gray-400 mb-4">Developed an AI-powered drone system for precise crop monitoring, pest detection, and optimized irrigation.</p>
+                        <div class="flex flex-wrap gap-2 text-sm">
+                            <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full">AI/ML</span>
+                            <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full">Robotics</span>
+                        </div>
+                    </div>
+                    <!-- Project Card 2: Decentralized Energy Grid (Example) -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Decentralized Renewable Energy Grid</h3>
+                        <p class="text-gray-400 mb-4">Pioneered a community-based microgrid using solar and wind, integrated with blockchain for energy trading.</p>
+                        <div class="flex flex-wrap gap-2 text-sm">
+                            <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full">Blockchain</span>
+                            <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full">Renewables</span>
+                        </div>
+                    </div>
+                    <!-- Project Card 3: Sustainable Urban Farming (Example) -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Vertical Farm OS for Urban Centers</h3>
+                        <p class="text-gray-400 mb-4">Designed and implemented an operating system for automated vertical farms, bringing fresh produce closer to urban consumers.</p>
+                        <div class="flex flex-wrap gap-2 text-sm">
+                            <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full">IoT</span>
+                            <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full">Hydroponics</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Evolving Thoughts Section (Voice Notes & Writings) -->
+        <section id="thoughts" class="py-20 px-8 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-12">Evolving Thoughts: Voice Logs & Reflections</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Voice Note 1 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Voice Log: The Future of Food</h3>
+                        <p class="text-gray-400 mb-4">A brief reflection on how technology can revolutionize global food security.</p>
+                        <audio controls class="w-full mt-4 rounded-lg">
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <p class="text-sm text-gray-500 mt-2">Recorded: 2025-03-10</p>
+                    </div>
+                    <!-- Voice Note 2 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Voice Log: Ethical AI in Agriculture</h3>
+                        <p class="text-gray-400 mb-4">Exploring the ethical implications of AI deployment in agricultural practices.</p>
+                        <audio controls class="w-full mt-4 rounded-lg">
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <p class="text-sm text-gray-500 mt-2">Recorded: 2025-04-22</p>
+                    </div>
+                    <!-- Text Reflection -->
+                    <div class="module-card p-6 rounded-xl md:col-span-2">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Reflection: The Interconnectedness of Systems</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            "My journey from observing the intricate dance of soil microbes to conceptualizing satellite networks has revealed a profound truth: all systems, natural and technological, are deeply interconnected. Understanding these linkages is key to designing truly resilient and sustainable solutions. This perspective fuels my drive to innovate at the intersection of diverse fields, seeking harmony where others see division."
+                        </p>
+                        <p class="text-sm text-gray-500 mt-4">Written: 2025-06-01</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Side Quests Section -->
+        <section id="quests" class="py-20 px-8 bg-gray-950 border-t border-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-12">Side Quests: Explorations & Personal Growth</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Quest Card 1 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Deep Learning for Climate Modeling</h3>
+                        <p class="text-gray-400 mb-4">Exploring advanced neural networks to predict localized climate patterns and their impact on agriculture.</p>
+                        <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full text-sm">Research</span>
+                    </div>
+                    <!-- Quest Card 2 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Permaculture Design Certification</h3>
+                        <p class="text-gray-400 mb-4">Applying ecological design principles to create self-sustaining and regenerative systems on a small scale.</p>
+                        <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full text-sm">Learning</span>
+                    </div>
+                    <!-- Quest Card 3 -->
+                    <div class="module-card p-6 rounded-xl">
+                        <h3 class="text-2xl font-semibold text-white mb-3">Open-Source Hardware for Rural Tech</h3>
+                        <p class="text-400 mb-4">Contributing to open-source projects that provide affordable and adaptable technology solutions for remote communities.</p>
+                        <span class="bg-gray-700 text-cyan-300 px-3 py-1 rounded-full text-sm">Community</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rotating Bookshelf Section -->
+        <section id="books" class="py-20 px-8 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl font-bold text-cyan-400 mb-12">Rotating Bookshelf: Mind Fuel</h2>
+                <div class="bookshelf-container relative">
+                    <div class="bookshelf" id="bookshelf">
+                        <!-- Book items will be dynamically loaded here by JS -->
+                    </div>
+                    <button id="prevBook" class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full shadow-lg z-20 transform transition duration-300 hover:scale-110">
+                        &#9664; <!-- Left arrow -->
+                    </button>
+                    <button id="nextBook" class="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full shadow-lg z-20 transform transition duration-300 hover:scale-110">
+                        &#9654; <!-- Right arrow -->
+                    </button>
+                </div>
+                <p class="text-gray-400 mt-8 text-lg">A curated collection of books that have shaped my journey and fueled my thoughts.</p>
+            </div>
+        </section>
+
+        <!-- Transparent Roadmap Section -->
+        <section id="roadmap" class="py-20 px-8 bg-gray-950 border-t border-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-cyan-400 mb-12">Transparent Roadmap: EcoXchange Milestones & Goals</h2>
+                <ul class="timeline">
+                    <li class="timeline-item">
+                        <div class="timeline-item-content">
+                            <h3 class="text-2xl font-semibold text-white mb-2">Month 1-2: Site Survey & Soil Assessment</h3>
+                            <p class="text-gray-400">Initiate detailed site surveys and comprehensive soil health assessments for the pilot area.</p>
+                            <span class="text-sm text-cyan-300">Status: Initializing</span>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-item-content">
+                            <h3 class="text-2xl font-semibold text-white mb-2">Month 3-4: Planting & Soil Enrichment</h3>
+                            <p class="text-gray-400">Begin planting native tree species and implement soil enrichment strategies.</p>
+                            <span class="text-sm text-cyan-300">Status: Planning</span>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-item-content">
+                            <h3 class="text-2xl font-semibold text-white mb-2">Month 5-12: Monitoring & Data Collection</h3>
+                            <p class="text-gray-400">Continuous monitoring of ecological benefits using remote sensing, drones, and field methods.</p>
+                            <span class="text-sm text-cyan-300">Status: In Progress</span>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-item-content">
+                            <h3 class="text-2xl font-semibold text-white mb-2">Month 12-15: Report & Grant Submission</h3>
+                            <p class="text-gray-400">Compile comprehensive reports and submit proposals to academic and grant bodies.</p>
+                            <span class="text-sm text-cyan-300">Status: Future Goal</span>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-item-content">
+                            <h3 class="text-2xl font-semibold text-white mb-2">Ongoing: Expand Eco-Entrepreneurship Network</h3>
+                            <p class="text-gray-400">Continuously forge partnerships with eco-conscious businesses and research institutions.</p>
+                            <span class="text-sm text-cyan-300">Status: Active</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-8 px-8 text-center text-gray-400 border-t border-gray-700">
+        <p>&copy; 2025 SIVANAND CK. All rights reserved. Journeying from Soil to Satellites.</p>
+        <div class="flex justify-center space-x-4 mt-4">
+            <a href="https://www.linkedin.com/in/sivanand-c-k-790033218" target="_blank" class="text-gray-400 hover:text-cyan-400 transition-colors duration-300">LinkedIn</a>
+            <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors duration-300">GitHub</a>
+            <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Twitter</a>
+            <a href="mailto:cksivanand@gmail.com" class="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Email</a>
+            <a href="tel:+917558910661" class="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Phone</a>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Rotating Bookshelf Logic
+        const bookshelfElement = document.getElementById('bookshelf');
+        const prevBookButton = document.getElementById('prevBook');
+        const nextBookButton = document.getElementById('nextBook');
+
+        const books = [
+            { title: "Sapiens", author: "Yuval Noah Harari", cover: "https://placehold.co/150x220/3498db/ffffff?text=Sapiens" },
+            { title: "The Martian", author: "Andy Weir", cover: "https://placehold.co/150x220/2ecc71/ffffff?text=The+Martian" },
+            { title: "Silent Spring", author: "Rachel Carson", cover: "https://placehold.co/150x220/e74c3c/ffffff?text=Silent+Spring" },
+            { title: "Deep Learning", author: "Goodfellow et al.", cover: "https://placehold.co/150x220/9b59b6/ffffff?text=Deep+Learning" },
+            { title: "Permaculture", author: "Bill Mollison", cover: "https://placehold.co/150x220/f1c40f/000000?text=Permaculture" },
+            { title: "Cosmos", author: "Carl Sagan", cover: "https://placehold.co/150x220/1abc9c/ffffff?text=Cosmos" },
+            { title: "The Innovator's Dilemma", author: "Clayton Christensen", cover: "https://placehold.co/150x220/d35400/ffffff?text=Innovator's+Dilemma" },
+            { title: "Drawdown", author: "Paul Hawken", cover: "https://placehold.co/150x220/34495e/ffffff?text=Drawdown" }
+        ];
+
+        let currentRotation = 0;
+        const bookAngle = 360 / books.length; // Angle for each book
+
+        function renderBooks() {
+            bookshelfElement.innerHTML = ''; // Clear existing books
+            books.forEach((book, index) => {
+                const bookItem = document.createElement('div');
+                bookItem.classList.add('book-item');
+                // Calculate rotation for each book item
+                const rotationY = index * bookAngle;
+                bookItem.style.transform = `rotateY(${rotationY}deg) translateZ(150px)`; // Adjust translateZ for depth
+                
+                const img = document.createElement('img');
+                img.src = book.cover;
+                img.alt = `${book.title} by ${book.author}`;
+                img.classList.add('book-cover');
+                img.onerror = function() { this.src = 'https://placehold.co/150x220/333/eee?text=No+Cover'; }; // Fallback image
+                
+                bookItem.appendChild(img);
+                bookshelfElement.appendChild(bookItem);
+            });
+            bookshelfElement.style.transform = `rotateY(${currentRotation}deg)`; // Apply overall rotation
+        }
+
+        function rotateBookshelf(direction) {
+            currentRotation += direction * bookAngle;
+            bookshelfElement.style.transform = `rotateY(${currentRotation}deg)`;
+        }
+
+        prevBookButton.addEventListener('click', () => rotateBookshelf(1)); // Rotate right to see previous book
+        nextBookButton.addEventListener('click', () => rotateBookshelf(-1)); // Rotate left to see next book
+
+        // Initial render of books
+        renderBooks();
+
+        // Simple animation for hero section elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroTitle = document.querySelector('.animate-fade-in-up');
+            const heroText = document.querySelector('.animate-fade-in-up.delay-200');
+            const heroButton = document.querySelector('.animate-fade-in-up.delay-400');
+
+            heroTitle.style.opacity = 0;
+            heroTitle.style.transform = 'translateY(20px)';
+            heroText.style.opacity = 0;
+            heroText.style.transform = 'translateY(20px)';
+            heroButton.style.opacity = 0;
+            heroButton.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                heroTitle.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+                heroTitle.style.opacity = 1;
+                heroTitle.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                heroText.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+                heroText.style.opacity = 1;
+                heroText.style.transform = 'translateY(0)';
+            }, 300);
+
+            setTimeout(() => {
+                heroButton.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+                heroButton.style.opacity = 1;
+                heroButton.style.transform = 'translateY(0)';
+            }, 500);
+        });
+
+    </script>
+</body>
+</html>
